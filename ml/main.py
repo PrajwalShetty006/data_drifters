@@ -1,41 +1,22 @@
-from explainable.explain_forecast import generate_forecast_explanation
+from explainable.groq_explain import generate_forecast_explanation
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from forecasting.forecast_model import forecast_next_28_days, train_forecast_model
 from segmentation.rfm_model import calculate_rfm
 from segmentation.discount_engine import generate_discounts
-
+from blockchain.blockchain_utils import compute_merkle_root, compute_dataset_hash
+import pandas as pd
 
 app = FastAPI()
-
-# Add CORS middleware to allow frontend and backend to access ML server
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",  # Frontend
-        "http://localhost:5000",  # Backend
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:5000",
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 
 @app.get("/forecast")
 def get_forecast():
     forecast = forecast_next_28_days()
     return {"forecast": forecast}
 
-
-
 @app.get("/rfm")
 def get_rfm():
     rfm = calculate_rfm()
     return rfm
-
-
 
 @app.get("/discounts")
 def get_discounts():
@@ -43,49 +24,22 @@ def get_discounts():
     discounts = generate_discounts(rfm["segment_summary"])
     return discounts
 
-
-# ------------------------------
-# 4) AGENTIC AI ENDPOINT (Optional)
-# ------------------------------
-# @app.post("/agent")
-# def get_agent_insights():
-#     forecast = forecast_next_28_days()
-#     rfm = calculate_rfm()
-#     discounts = generate_discounts(rfm["segment_summary"])
-#
-#     insights = generate_agentic_insights(
-#         forecast,
-#         rfm["segment_summary"],
-#         discounts,
-#         rfm["top_segment"]
-#     )
-#
-#     return insights
-
-
-
 @app.get("/run-all")
 def run_all():
     forecast = forecast_next_28_days()
     rfm = calculate_rfm()
     discounts = generate_discounts(rfm["segment_summary"])
-
     return {
         "forecast": forecast,
         "rfm": rfm,
         "discounts": discounts,
-        # "agent": agent_insights  # add later
     }
-
-
 
 @app.get("/")
 def home():
     return {"message": "Backend running successfully!"}
 
-
-
-@app.get("/explain-forecast")
+@app.get("/explain_forecast")
 def explain_forecast():
     forecast = forecast_next_28_days()
     rfm = calculate_rfm()
@@ -101,3 +55,17 @@ def explain_forecast():
         "explanation": explanation
     }
 
+@app.get("/blockchain/integrity")
+def blockchain_integrity():
+    df = pd.read_csv("data/online_retail_II.csv")  # relative path
+
+    records = df.to_dict(orient="records")
+
+    dataset_hash = compute_dataset_hash(records)
+    merkle_root = compute_merkle_root(records)
+
+    return {
+        "dataset_hash": dataset_hash,
+        "merkle_root": merkle_root,
+        "total_records": len(records)
+    }
