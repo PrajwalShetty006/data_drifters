@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Landing page body styles - default styles */
+  body {
+    @apply bg-black text-white relative h-screen overflow-x-hidden font-sans;
+  }
+}

@@ -1,0 +1,93 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Environment variables - CRITICAL: Never commit these!
+.env
+.env.local
+.env.*.local
+backend/.env
+frontend/redact_data_drifters/.env
+ml/.env
+
+# Build outputs
+dist/
+build/
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# System files (Windows)
+AppData/
+Contacts/
+Desktop/
+Downloads/
+Favorites/
+Links/
+Music/
+NTUSER.DAT*
+ntuser.*
+Saved Games/
+Searches/
+Videos/
+.bash_history
+.cursor/
+.gitconfig
+.ipython/
+.lesshst
+.viminfo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv/
+
+# ML Models (if large - uncomment if models are too big)
+# ml/models/*.pkl
+# !ml/models/.gitkeep
+
+# Data files (if large - uncomment if data files are too big)
+# ml/data/*.csv
+# !ml/data/.gitkeep
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Package manager locks (optional - some prefer to commit these)
+# package-lock.json
+# yarn.lock
+
+# Coverage reports
+coverage/
+*.coverage
+.nyc_output/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
